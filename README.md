@@ -1,0 +1,2 @@
+# SubScan
+SubFinder is a script and a Python module that is used to find directories and subdomains of a web site using word lists, scan the ports of a machine, retrieve the route of a request...  SubFinder has two main functions one for listing directories of a website on Windows that does not have an anonymous mode and one for listing directories of a website on Linux that has an anonymous mode.
