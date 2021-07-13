@@ -16,8 +16,6 @@ SubScan has two main functions one for listing directories of a website on Windo
   
   <h2>Configuration</h2>
   
-  ![Config Video](Config_Video.gif)
-  
   1) ```tor --hash-password yourpassword```
   
   2) Copy the result
