@@ -22,26 +22,26 @@ SubScan has two main functions one for listing directories of a website on Windo
      
   3) With linux terminal run this command
 
-  ```sudo python3 subscan.py -tp -p yourpassword -h yourhashedpassword```
+  ```sudo python3 SubScan_shell.py -tp -p yourpassword -h yourhashedpassword```
   
  
 <h1>Terminal commands</h1>
   
-  ```python3 subscan.py -find -u https://github.com/ -w dl.txt [-f] [-e .php]``` --> List the directories of a website with method full
+  ```python3 SubScan_shell.py -find -u https://github.com/ -w dl.txt [-f] [-e .php]``` --> List the directories of a website with method full
   
-  ```python3 subscan.py -scan -i 0.0.0.0 [-r 1-9000] [-t 0.2] [-tn 20]``` --> List the open ports between 1 and 9000 on host 0.0.0.0 with a timeout of 0.2 and 20 threads 
+  ```python3 SubScan_shell.py -scan -i 0.0.0.0 [-r 1-9000] [-t 0.2] [-tn 20]``` --> List the open ports between 1 and 9000 on host 0.0.0.0 with a timeout of 0.2 and 20 threads 
   
-  ```python3 subscan.py -ip -u google.com``` --> Get the server ip of the web page
+  ```python3 SubScan_shell.py -ip -u google.com``` --> Get the server ip of the web page
   
-  ```python3 subscan.py -dns -u https://google.com/ -w dl.txt [-f]``` --> List the subdomains of a website with method full
+  ```python3 SubScan_shell.py -dns -u https://google.com/ -w dl.txt [-f]``` --> List the subdomains of a website with method full
   
-  ```python3 subscan.py -route -u https://google.com/``` --> List the routes of the url
+  ```python3 SubScan_shell.py -route -u https://google.com/``` --> List the routes of the url
   
 <h1>SubFinder Python Module</h1>
 
   <h2>First step import the module</h2>
   
-  ```from SubScan import subscan```
+  ```import SubScan```
 
   <h2>Windows commands</h2>
 
@@ -64,16 +64,16 @@ SubScan has two main functions one for listing directories of a website on Windo
    
    Use this command to scan the ports of a machine
    
-   ``subscan.scan_ports('ip', 'search_range', timeout, thread_number)``
+   ``SubScan.scan_ports('ip', 'search_range', timeout, thread_number)``
    
    *Ex :* 
-   ``subscan.scan_ports('0.0.0.0.0', '1-8000', 1, 20)``
+   ``SubScan.scan_ports('0.0.0.0.0', '1-8000', 1, 20)``
 
    <h3>Get ip</h3>
   
    Use this command to retrieve the server **ip** of a link **:** 
   
-  ```subscan.get_host_ip('mysite.com')```
+  ```SubScan.get_host_ip('mysite.com')```
   
   <h2>Specials commands</h2>
   
@@ -84,7 +84,7 @@ SubScan has two main functions one for listing directories of a website on Windo
   Anonymous mode : ***No***
   
   ```
-  r = subscan.windows_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log')
+  r = SubScan.windows_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log')
   print(r) #This line will display the list of valid directories once the search is complete
   
   ```
@@ -94,7 +94,7 @@ SubScan has two main functions one for listing directories of a website on Windo
   Anonymous mode : ***Yes***
   
   ```
-  r = subscan.linux_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log')
+  r = SubScan.linux_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log')
   print(r) #This line will display the list of valid directories once the search is complete
   
   ```
