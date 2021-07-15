@@ -39,7 +39,7 @@ SubScan has two main functions one for listing directories of a website on Windo
   
 <h1>SubFinder Python Module</h1>
 
-  <h2>First step import the module</h2>
+  <h2>First step : import the module</h2>
   
   ```import SubScan```
 
