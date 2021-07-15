@@ -75,9 +75,11 @@ SubScan has two main functions one for listing directories of a website on Windo
   
   ```SubScan.get_host_ip('mysite.com')```
   
-  <h3>Subdomains finder (based on wordlist)</h3> 
+  <h3>Subdomains finder (based on word list)</h3> 
   
-    ```SubScan.DNS_enum('https://google.com', 'test.txt', 0.1, 'full')```
+  
+   ```SubScan.DNS_enum('https://google.com', 'test.txt', 0.1, 'full')```
+  
   
   <h2>Specials commands</h2>
   
@@ -93,7 +95,7 @@ SubScan has two main functions one for listing directories of a website on Windo
   
   ```
   
-  <h3>Specials commands for Linux</h3>
+  <h3>Special commands for Linux</h3>
   
   Anonymous mode : ***Yes***
   
