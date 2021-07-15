@@ -81,11 +81,11 @@ SubScan has two main functions one for listing directories of a website on Windo
    ```SubScan.DNS_enum('https://google.com', 'test.txt', 0.1, 'full')```
   
   
-  <h2>Specials commands</h2>
+  <h2>Special commands</h2>
   
   The special commands are used to retrieve the list of valid site directories without displaying them.
   
-  <h3>Specials commands for Windows</h3>
+  <h3>Special commands for Windows</h3>
   
   Anonymous mode : ***No***
   
