@@ -1,8 +1,9 @@
 # SubScan
 
-SubScan is a script and a Python module that is used to find directories and subdomains of a web site using word lists, scan the ports of a machine, retrieve the route of a request...
+SubScan is a script and a Python module that is used to find directories and subdomains of a web site using word lists, scan open ports on a machine, retrieve route of a request...
 
-SubScan has two main functions one for listing directories of a website on Windows that does not have an anonymous mode and one for listing directories of a website on Linux that has an anonymous mode.
+SubScan has two main functions: one to list directories of a website on Windows (no anonymous mode) and another to list directories of a website on Linux that (with anonymous mode).
+
 <h1>Installation</h1>
 
   You can install it with  **:**  ```pip install --upgrade SubScan```
@@ -27,15 +28,15 @@ SubScan has two main functions one for listing directories of a website on Windo
  
 <h1>Terminal commands</h1>
   
-  ```python3 SubScan_shell.py -find -u https://github.com/ -w dl.txt [-f] [-e .php]``` --> List the directories of a website with method full
+  ```python3 SubScan_shell.py -find -u https://github.com/ -w dl.txt [-f] [-e .php]``` --> List directories of a website with method full
   
-  ```python3 SubScan_shell.py -scan -i 0.0.0.0 [-r 1-9000] [-t 0.2] [-tn 20]``` --> List the open ports between 1 and 9000 on host 0.0.0.0 with a timeout of 0.2 and 20 threads 
+  ```python3 SubScan_shell.py -scan -i 0.0.0.0 [-r 1-9000] [-t 0.2] [-tn 20]``` --> List open ports between 1 and 9000 on host 0.0.0.0 with a timeout of 0.2 and 20 threads 
   
   ```python3 SubScan_shell.py -ip -u google.com``` --> Get the server ip of the web page
   
-  ```python3 SubScan_shell.py -dns -u https://google.com/ -w dl.txt [-f]``` --> List the subdomains of a website with method full
+  ```python3 SubScan_shell.py -dns -u https://google.com/ -w dl.txt [-f]``` --> List subdomains of a website with method full
   
-  ```python3 SubScan_shell.py -route -u https://google.com/``` --> List the routes of the url
+  ```python3 SubScan_shell.py -route -u https://google.com/``` --> List routes of the url
   
 <h1>SubFinder Python Module</h1>
 
@@ -47,13 +48,19 @@ SubScan has two main functions one for listing directories of a website on Windo
 
    Anonymous mode : ***No***
 
-   ![Img1](2.png)
+   SubScan.windows_search(*url, wordlist, timeout, extension [optional], method [optional]*)
+   
+   Example :
+   ```SubScan.windows_search('https://mysite.com', 'mylist.txt', 0.5, '.php', 'full')```
                                                     
   <h2>Linux commands</h2>
 
    Anonymous mode : ***Yes*** (Based on Tor)
 
-  ![Img2](3.png)
+   SubScan.linux_search(*url, wordlist, timeout, extension [optional], method [optional]*)
+   
+   Example :
+   ```SubScan.linux_search('https://mysite.com', 'mylist.txt', 0.5, '.php', 'full')```
                                                     
                                                     
   *The 'full' method is used to display all requests.* 
@@ -62,7 +69,7 @@ SubScan has two main functions one for listing directories of a website on Windo
   
    <h3>Ports scan</h3>
    
-   Use this command to scan the ports of a machine
+   Use this command to scan open ports on a machine
    
    ``SubScan.scan_ports('ip', 'search_range', timeout, thread_number)``
    
