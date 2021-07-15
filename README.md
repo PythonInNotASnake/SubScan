@@ -51,7 +51,7 @@ SubScan has two main functions one for listing directories of a website on Windo
                                                     
   <h2>Linux commands</h2>
 
-   Anonymous mode : ***Yes***
+   Anonymous mode : ***Yes*** (Based on Tor)
 
   ![Img2](3.png)
                                                     
@@ -74,6 +74,9 @@ SubScan has two main functions one for listing directories of a website on Windo
    Use this command to retrieve the server **ip** of a link **:** 
   
   ```SubScan.get_host_ip('mysite.com')```
+  
+  <h3>Subdomains finder (based on wordlist)</h3> 
+    ```SubScan.DNS_enum('https://google.com', 'test.txt', 0.1, 'full')```
   
   <h2>Specials commands</h2>
   
