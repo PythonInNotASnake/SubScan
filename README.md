@@ -6,7 +6,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
 
 <h1>Installation</h1>
 
-  You can install it with  **:**  ```pip install --upgrade SubScan```
+  You can install it with  **:**  ```pip install --upgrade SubScan``` on windows, ```sudo pip install --upgrade SubScan``` on linux
   
   
 <h1>Linux version</h1>
@@ -28,15 +28,15 @@ SubScan has two main functions: one to list directories of a website on Windows 
  
 <h1>Terminal commands</h1>
   
-  ```python3 SubScan_shell.py -find -u https://github.com/ -w dl.txt [-f] [-e .php]``` --> List directories of a website with method full
+  ```python3 SubScan_shell.py -find -u https://github.com/ -w dl.txt [-a User_agent.Android.Edge] [-f] [-e .php]``` --> List directories of a website with method full
   
   ```python3 SubScan_shell.py -scan -i 0.0.0.0 [-r 1-9000] [-t 0.2] [-tn 20]``` --> List open ports between 1 and 9000 on host 0.0.0.0 with a timeout of 0.2 and 20 threads 
   
   ```python3 SubScan_shell.py -ip -u google.com``` --> Get the server ip of the web page
   
-  ```python3 SubScan_shell.py -dns -u https://google.com/ -w dl.txt [-f]``` --> List subdomains of a website with method full
+  ```python3 SubScan_shell.py -dns -u https://google.com/ -w dl.txt [-a User_agent.Android.Edge] [-f]``` --> List subdomains of a website with method full
   
-  ```python3 SubScan_shell.py -route -u https://google.com/``` --> List routes of the url
+  ```python3 SubScan_shell.py -route -u https://google.com/ [-a User_agent.Android.Edge]``` --> List routes of the url
   
 <h1>SubFinder Python Module</h1>
 
