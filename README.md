@@ -60,7 +60,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
    SubScan.linux_search(*url, wordlist, timeout, extension [optional],  user-agent[optional], method [optional]*)
    
    Example :
-   ```SubScan.linux_search('https://mysite.com', 'mylist.txt', 0.5, '.php', 'full')```
+   ```SubScan.linux_search('https://mysite.com', 'mylist.txt', 0.5, '.php', SubScan.User_agent.Linux.Opera, 'full')```
                                                     
                                                     
   *The 'full' method is used to display all requests.* 
@@ -85,7 +85,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
   <h3>Subdomains finder (based on word list)</h3> 
   
   
-   ```SubScan.DNS_enum('https://google.com', 'test.txt', 0.1, 'full')```
+   ```SubScan.DNS_enum('https://google.com', 'test.txt', 0.1, SubScan.User_agent.Linux.Opera, 'full')```
   
   
   <h2>Special commands</h2>
@@ -97,7 +97,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
   Anonymous mode : ***No***
   
   ```
-  r = SubScan.windows_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log')
+  r = SubScan.windows_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log', SubScan.User_agent.Linux.Opera)
   print(r) #This line will display the list of valid directories once the search is complete
   
   ```
@@ -107,7 +107,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
   Anonymous mode : ***Yes***
   
   ```
-  r = SubScan.linux_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log')
+  r = SubScan.linux_search_NP('https://mysite.com', 'mylist.txt', 0.5, '.log', SubScan.User_agent.Linux.Opera)
   print(r) #This line will display the list of valid directories once the search is complete
   
   ```
