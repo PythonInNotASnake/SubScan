@@ -48,16 +48,16 @@ SubScan has two main functions: one to list directories of a website on Windows 
 
    Anonymous mode : ***No***
 
-   SubScan.windows_search(*url, wordlist, timeout, extension [optional], method [optional]*)
+   SubScan.windows_search(*url, wordlist, timeout, extension [optional], user-agent[optional], method [optional]*)
    
    Example :
-   ```SubScan.windows_search('https://mysite.com', 'mylist.txt', 0.5, '.php', 'full')```
+   ```SubScan.windows_search('https://mysite.com', 'mylist.txt', 0.5, '.php', SubScan.User_agent.Linux.Opera, 'full')```
                                                     
   <h2>Linux commands</h2>
 
    Anonymous mode : ***Yes*** (Based on Tor)
 
-   SubScan.linux_search(*url, wordlist, timeout, extension [optional], method [optional]*)
+   SubScan.linux_search(*url, wordlist, timeout, extension [optional],  user-agent[optional], method [optional]*)
    
    Example :
    ```SubScan.linux_search('https://mysite.com', 'mylist.txt', 0.5, '.php', 'full')```
