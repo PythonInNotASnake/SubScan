@@ -112,4 +112,8 @@ SubScan has two main functions: one to list directories of a website on Windows 
   
   ```
   
+  <h3>Here is the list of User-Agents</h3>
+
+  ![list](UA_list.png)
+  
   ❗ *For special commands there is no method* ❗
