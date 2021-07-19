@@ -15,6 +15,7 @@ try:
     import stem
     import threading
     import os
+    import subprocess
 except ModuleNotFoundError:
     exit("You need to install the right modules")
 
@@ -116,7 +117,7 @@ class User_agent:
 
     class Bot:
         start = 'Mozilla/5.0 (compatible; '
-        Google = str(start + 'Googlebot/2.1; +http://www.google.com/bot.html')
+        Google = str(start + 'Googlebot/2.1; +http://www.google.com/bot.html)')
         Bing = str(start + 'bingbot/2.0; +http://www.bing.com/bingbot.htm)')
         Yahoo = str(start + 'Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)')
 
@@ -138,7 +139,7 @@ class SubScan_utils:
     @staticmethod
     def stop_tor_service():
         try:
-            os.system("sudo service tor stop")
+            subprocess.run('sudo service tor stop', shell=True)
         except:
             pass
 
@@ -148,7 +149,7 @@ class SubScan_utils:
             exit(color.pastel_red("\nWindows does not support Tor\n"))
         else:
             try:
-                os.system("sudo service tor start")
+                subprocess.run('sudo service tor start', shell=True)
                 if ua:
 
                     SubScan_utils.new_ip(0)
@@ -275,7 +276,7 @@ class SubScan_utils:
         return url
 
     @staticmethod 
-    def hash_passwd_file(pswd, hpswd, *m):
+    def hash_passwd_file(pswd, *m):
         def config(p1, p2, file, p4):
             if re.search(p1, file):
                 r = re.sub(p1, p4, file)
@@ -286,43 +287,47 @@ class SubScan_utils:
         if os.name == 'nt':
             exit(color.pastel_red("\nWindows does not support Tor\n"))
         else:
-            
-            with open(f'{SubScan_utils.get_path()}passwd.txt', 'w') as wp:
-                wp.write(pswd)
-            wp.close()
-            with open('/../etc/tor/torrc', 'r') as fi:
-                file = fi.read()
-                tor_reg = {
-                    'with-#': {
-                        'HashedControlPassword': "[#]{1}HashedControlPassword 16:[0-9A-Z]{1,}",
-                        'CookieAuthentication': "[#]{1}CookieAuthentication 1",
-                        'ControlPort': "[#]{1}ControlPort 9051",
-                    },
-                    'whithout-#': {
-                        'HashedControlPassword': "HashedControlPassword 16:[0-9A-Z]{1,}",
-                        'CookieAuthentication': "CookieAuthentication 1",
-                        'ControlPort': "ControlPort 9051",
+            if os.getuid() != 0:
+                exit(color.pastel_red("\nPlease use this command in admin mode\n"))
+            else:
+                out = subprocess.check_output(f'tor --hash-password {pswd}', shell=True)
+                out = out.decode('utf-8').replace('\n', '')
+                out = re.search(r"16[:]{1}[A-Z0-9]{10,}", out).group()
+                with open(f'{SubScan_utils.get_path()}passwd.txt', 'w') as wp:
+                    wp.write(str(pswd))
+                wp.close()
+                with open('/../etc/tor/torrc', 'r') as fi:
+                    file = fi.read()
+                    tor_reg = {
+                        'with-#': {
+                            'HashedControlPassword': "[#]{1}HashedControlPassword 16:[0-9A-Z]{1,}",
+                            'CookieAuthentication': "[#]{1}CookieAuthentication 1",
+                            'ControlPort': "[#]{1}ControlPort 9051",
+                        },
+                        'whithout-#': {
+                            'HashedControlPassword': "HashedControlPassword 16:[0-9A-Z]{1,}",
+                            'CookieAuthentication': "CookieAuthentication 1",
+                            'ControlPort': "ControlPort 9051",
+                        }
                     }
-                }
+                    r = config(tor_reg['with-#']['HashedControlPassword'], tor_reg['whithout-#']['HashedControlPassword'], file, f"HashedControlPassword {out}")
+                    r = config(tor_reg['with-#']['CookieAuthentication'], tor_reg['whithout-#']['CookieAuthentication'],
+                               r, "CookieAuthentication 1")
+                    r = config(tor_reg['with-#']['ControlPort'], tor_reg['whithout-#']['ControlPort'],
+                               r, "ControlPort 9051")
+                    with open('/../etc/tor/torrc', 'w') as f:
+                        f.write(r)
+                        f.close()
+                    fi.close()
 
-                r = config(tor_reg['with-#']['HashedControlPassword'], tor_reg['whithout-#']['HashedControlPassword'], file, f"HashedControlPassword {hpswd}")
-                r = config(tor_reg['with-#']['CookieAuthentication'], tor_reg['whithout-#']['CookieAuthentication'],
-                           r, "CookieAuthentication 1")
-                r = config(tor_reg['with-#']['ControlPort'], tor_reg['whithout-#']['ControlPort'],
-                           r, "ControlPort 9051")
-                with open('/../etc/tor/torrc', 'w') as f:
-                    f.write(r)
-                    f.close()
-                fi.close()
-
-                if m:
-                    exit(color.green("\nFinish\n"))
+                    if m:
+                        exit(color.green("\nFinish\n"))
 
 
     @staticmethod 
     def error():
         try:
-            os.system("sudo service tor stop")
+            subprocess.run('sudo service tor stop', shell=True)
         except:
             pass
         exit(color.red("\nError !\n"))
@@ -334,7 +339,7 @@ class SubScan_utils:
     @staticmethod 
     def keyboard_exit():
         try:
-            os.system("sudo service tor stop")
+            subprocess.run('sudo service tor stop', shell=True)
         except:
             pass
         exit()
@@ -362,7 +367,8 @@ def linux_search(site, file, timeout, extension, ua, method):
                     compt += 1
                     if compt % 40 == 0:
                         SubScan_utils.new_ip(0)
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1]
                     r = session.get(url)
                     if r.status_code == 200:
@@ -376,7 +382,8 @@ def linux_search(site, file, timeout, extension, ua, method):
                     compt += 1
                     if compt % 40 == 0:
                         SubScan_utils.new_ip(0)
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1] + extension
                     r = session.get(url)
                     if r.status_code == 200:
@@ -393,7 +400,8 @@ def linux_search(site, file, timeout, extension, ua, method):
                     compt += 1
                     if compt % 40 == 0:
                         SubScan_utils.new_ip(0)
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1]
                     r = session.get(url)
                     if r.status_code == 200:
@@ -404,7 +412,8 @@ def linux_search(site, file, timeout, extension, ua, method):
                     compt += 1
                     if compt % 40 == 0:
                         SubScan_utils.new_ip(0)
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1] + extension
                     r = session.get(url)
                     if r.status_code == 200:
@@ -436,7 +445,8 @@ def windows_search(site, file, timeout, extension, ua, method):
         if method == "full":
             if extension == None:
                 for line in file:
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1]
                     r = requests.get(url, headers=headers)
                     if r.status_code == 200:
@@ -447,7 +457,8 @@ def windows_search(site, file, timeout, extension, ua, method):
                             f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
             else:
                 for line in file:
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1] + extension
                     r = requests.get(url, headers=headers)
                     if r.status_code == 200:
@@ -460,7 +471,8 @@ def windows_search(site, file, timeout, extension, ua, method):
         elif method == None:
             if extension == None:
                 for line in file:
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1]
                     r = requests.get(url, headers=headers)
                     if r.status_code == 200:
@@ -468,7 +480,8 @@ def windows_search(site, file, timeout, extension, ua, method):
                             f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
             else:
                 for line in file:
-                    time.sleep(float(timeout))
+                    if timeout != None:
+                        time.sleep(float(timeout))
                     url = site + line[:-1] + extension
                     r = requests.get(url, headers=headers)
                     if r.status_code == 200:
@@ -495,7 +508,8 @@ def windows_search_NP(site, file, timeout, extension, ua):
     with open(file, 'r') as file:
         if extension == None:
             for line in file:
-                time.sleep(float(timeout))
+                if timeout != None:
+                    time.sleep(float(timeout))
                 url = site + line[:-1]
                 r = requests.get(url, headers=headers)
                 if r.status_code == 200:
@@ -503,7 +517,8 @@ def windows_search_NP(site, file, timeout, extension, ua):
             return list
         else:
             for line in file:
-                time.sleep(float(timeout))
+                if timeout != None:
+                    time.sleep(float(timeout))
                 url = site + line[:-1] + extension
                 r = requests.get(url, headers=headers)
                 if r.status_code == 200:
@@ -532,7 +547,8 @@ def linux_search_NP(site, file, timeout, extension, ua):
                 compt += 1
                 if compt % 40 == 0:
                     SubScan_utils.new_ip()
-                time.sleep(float(timeout))
+                if timeout != None:
+                    time.sleep(float(timeout))
                 url = site + line[:-1]
                 r = session.get(url)
                 if r.status_code == 200:
@@ -543,7 +559,8 @@ def linux_search_NP(site, file, timeout, extension, ua):
                 compt += 1
                 if compt % 40 == 0:
                     SubScan_utils.new_ip()
-                time.sleep(float(timeout))
+                if timeout != None:
+                    time.sleep(float(timeout))
                 url = site + line[:-1]
                 r = session.get(url)
                 if r.status_code == 200:
@@ -584,7 +601,8 @@ def DNS_enum(site, file, timeout, ua, method):
                 compt += 1
                 if compt % 40 == 0:
                     SubScan_utils.new_ip(0)
-                time.sleep(float(timeout))
+                if timeout != None:
+                    time.sleep(float(timeout))
                 url = f"{r1}{line[:-1]}.{site}"
                 try:
                     r = session.get(url)
@@ -605,7 +623,8 @@ def DNS_enum(site, file, timeout, ua, method):
                 compt += 1
                 if compt % 40 == 0:
                     SubScan_utils.new_ip(0)
-                time.sleep(float(timeout))
+                if timeout != None:
+                    time.sleep(float(timeout))
                 url = f"{r1}{line[:-1]}.{site}"
                 try:
                     r = session.get(url)
@@ -637,7 +656,8 @@ def scan_ports(ip, value, t, thread):
         for p in port:
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(float(t))
+                if t != None:
+                    sock.settimeout(float(t))
                 result = sock.connect_ex((ip, p))
                 if result == 0:
                     port_list.append(int(p))
@@ -654,7 +674,7 @@ def scan_ports(ip, value, t, thread):
         if compt % 350 == 0:
             time.sleep(0.5)
         threading.Thread(target=search_ports, args=(ip, list)).start()
-    time.sleep(1.5)
+    time.sleep(0.5)
     for p in sorted(port_list):
         try:
             print(
@@ -700,4 +720,3 @@ def get_routes(url, ua):
     except requests.exceptions.ConnectionError or requests.exceptions.InvalidURL:
         SubScan_utils.stop_tor_service()
         exit(color.red("Url not found"))
-
