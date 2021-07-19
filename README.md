@@ -17,13 +17,9 @@ SubScan has two main functions: one to list directories of a website on Windows 
   
   <h2>Configuration</h2>
   
-  1) ```tor --hash-password yourpassword```
-  
-  2) Copy the result
-     
-  3) With linux terminal run this command
+  1) With linux terminal run this command
 
-  ```sudo python3 SubScan_shell.py -tp -p yourpassword -h yourhashedpassword```
+  ```sudo python3 SubScan_shell.py -tp -p yourpassword```
   
  
 <h1>Terminal commands</h1>
