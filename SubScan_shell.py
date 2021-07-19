@@ -1,12 +1,12 @@
 import SubScan
 import colorama
-import os
 import sys
+import subprocess
 
 if __name__ == "__main__":
     colorama.init()
     argument = sys.argv
-    os.system('clear')
+    subprocess.run('clear', shell=True)
     try:
         SubScan.SubScan_utils.start_message()
         if argument[1] == "-find":
@@ -50,29 +50,29 @@ if __name__ == "__main__":
                                 extension = argument[argument.index("-e") + 1]
                                 if '-a' in argument:
                                     user_agent = argument[argument.index("-a") + 1]
-                                    SubScan.linux_search(url, file, 0.5, extension, str(user_agent), 'full')
+                                    SubScan.linux_search(url, file, None, extension, str(user_agent), 'full')
                                 else:
-                                    SubScan.linux_search(url, file, 0.5, extension, None, 'full')
+                                    SubScan.linux_search(url, file, None, extension, None, 'full')
                             else:
                                 if '-a' in argument:
                                     user_agent = argument[argument.index("-a") + 1]
-                                    SubScan.linux_search(url, file, 0.5, None, str(user_agent), 'full')
+                                    SubScan.linux_search(url, file, None, None, str(user_agent), 'full')
                                 else:
-                                    SubScan.linux_search(url, file, 0.5, None, None, 'full')
+                                    SubScan.linux_search(url, file, None, None, None, 'full')
                         else:
                             if '-e' in argument:
                                 extension = argument[argument.index("-e") + 1]
                                 if '-a' in argument:
                                     user_agent = argument[argument.index("-a") + 1]
-                                    SubScan.linux_search(url, file, 0.5, extension, str(user_agent), None)
+                                    SubScan.linux_search(url, file, None, extension, str(user_agent), None)
                                 else:
-                                    SubScan.linux_search(url, file, 0.5, extension, None, None)
+                                    SubScan.linux_search(url, file, None, extension, None, None)
                             else:
                                 if '-a' in argument:
                                     user_agent = argument[argument.index("-a") + 1]
-                                    SubScan.linux_search(url, file, 0.5, None, str(user_agent), None)
+                                    SubScan.linux_search(url, file, None, None, str(user_agent), None)
                                 else:
-                                    SubScan.linux_search(url, file, 0.5, None, None, None)
+                                    SubScan.linux_search(url, file, None, None, None, None)
                 else:
                     SubScan.SubScan_utils.invalid_argument()
             else:
@@ -95,13 +95,13 @@ if __name__ == "__main__":
                             threads = argument[argument.index('-tn') + 1]
                             SubScan.scan_ports(ip, r, timeout, threads)
                         else:
-                            SubScan.scan_ports(ip, r, timeout, 12)
+                            SubScan.scan_ports(ip, r, timeout, 2)
                     else:
                         if '-tn' in argument:
                             threads = argument[argument.index('-tn') + 1]
-                            SubScan.scan_ports(ip, r, 0.25, threads)
+                            SubScan.scan_ports(ip, r, 1, threads)
                         else:
-                            SubScan.scan_ports(ip, r, 0.25, 12)
+                            SubScan.scan_ports(ip, r, 1, 2)
                 else:
                     if '-t' in argument:
                         timeout = argument[argument.index('-t') + 1]
@@ -109,24 +109,20 @@ if __name__ == "__main__":
                             threads = argument[argument.index('-tn') + 1]
                             SubScan.scan_ports(ip, '1-9000', timeout, threads)
                         else:
-                            SubScan.scan_ports(ip, '1-9000', timeout, 12)
+                            SubScan.scan_ports(ip, '1-9000', timeout, 2)
                     else:
                         if '-tn' in argument:
                             threads = argument[argument.index('-tn') + 1]
-                            SubScan.scan_ports(ip, '1-9000', 0.25, threads)
+                            SubScan.scan_ports(ip, '1-9000', 1, threads)
                         else:
-                            SubScan.scan_ports(ip, '1-9000', 0.25, 12)
+                            SubScan.scan_ports(ip, '1-9000', 1, 2)
             else:
                 SubScan.SubScan_utils.invalid_argument()
 
         elif argument[1] == '-tp':
             if '-p' in argument:
                 pswd = argument[argument.index('-p') + 1]
-                if '-h' in argument:
-                    hpswd = argument[argument.index('-h') + 1]
-                    SubScan.SubScan_utils.hash_passwd_file(pswd, hpswd, True)
-                else:
-                    SubScan.SubScan_utils.invalid_argument()
+                SubScan.SubScan_utils.hash_passwd_file(pswd, True)
             else:
                 SubScan.SubScan_utils.invalid_argument()
 
@@ -152,14 +148,14 @@ if __name__ == "__main__":
                         if '-a' in argument:
                             user_agent = argument[argument.index("-a") + 1]
                             if '-f' in argument:
-                                SubScan.DNS_enum(url, file, 0.5, str(user_agent), 'full')
+                                SubScan.DNS_enum(url, file, None, str(user_agent), 'full')
                             else:
-                                SubScan.DNS_enum(url, file, 0.5, str(user_agent), None)        
+                                SubScan.DNS_enum(url, file, None, str(user_agent), None)
                         else: 
                             if '-f' in argument:
-                                SubScan.DNS_enum(url, file, 0.5, None, 'full')
+                                SubScan.DNS_enum(url, file, None, None, 'full')
                             else:
-                                SubScan.DNS_enum(url, file, 0.5, None, None)
+                                SubScan.DNS_enum(url, file, None, None, None)
                 else:
                     SubScan.SubScan_utils.invalid_argument()
             else:
