@@ -21,45 +21,79 @@ except ModuleNotFoundError:
 
 
 class color:
-    @staticmethod
-    def black(text):
-        text = f"\u001b[30m{text}\u001b[39m"
-        return text
+    if os.name == 'nt':
+        @staticmethod
+        def black(text):
+            return text
 
-    @staticmethod
-    def red(text):
-        text = f"\u001b[31m{text}\u001b[39m"
-        return text
+        @staticmethod
+        def red(text):
+            return text
 
-    @staticmethod
-    def pastel_red(text):
-        text = f"\u001b[91m{text}\u001b[39m"
-        return text
+        @staticmethod
+        def pastel_red(text):
+            return text
 
-    @staticmethod
-    def yellow(text):
-        text = f"\u001b[33m{text}\u001b[39m"
-        return text
+        @staticmethod
+        def yellow(text):
+            return text
 
-    @staticmethod
-    def blue(text):
-        text = f"\u001b[36m{text}\u001b[39m"
-        return text
+        @staticmethod
+        def blue(text):
+            return text
 
-    @staticmethod
-    def green(text):
-        text = f"\u001b[92m{text}\u001b[39m"
-        return text
+        @staticmethod
+        def green(text):
+            return text
 
-    @staticmethod
-    def white(text):
-        text = f"\u001b[97m{text}\u001b[39m"
-        return text
+        @staticmethod
+        def white(text):
+            return text
 
-    @staticmethod
-    def magenta(text):
-        text = f"\u001b[95m{text}\u001b[39m"
-        return text
+        @staticmethod
+        def magenta(text):
+            return text
+
+    else:
+        @staticmethod
+        def black(text):
+            text = f"\u001b[30m{text}\u001b[39m"
+            return text
+
+        @staticmethod
+        def red(text):
+            text = f"\u001b[31m{text}\u001b[39m"
+            return text
+
+        @staticmethod
+        def pastel_red(text):
+            text = f"\u001b[91m{text}\u001b[39m"
+            return text
+
+        @staticmethod
+        def yellow(text):
+            text = f"\u001b[33m{text}\u001b[39m"
+            return text
+
+        @staticmethod
+        def blue(text):
+            text = f"\u001b[36m{text}\u001b[39m"
+            return text
+
+        @staticmethod
+        def green(text):
+            text = f"\u001b[92m{text}\u001b[39m"
+            return text
+
+        @staticmethod
+        def white(text):
+            text = f"\u001b[97m{text}\u001b[39m"
+            return text
+
+        @staticmethod
+        def magenta(text):
+            text = f"\u001b[95m{text}\u001b[39m"
+            return text
 
 
 class User_agent:
@@ -347,298 +381,308 @@ class SubScan_utils:
 
 
 def linux_search(site, file, timeout, extension, ua, method):
+    try:
+        if ua in User_agent.list:
+            ua = eval(ua)
 
-    if ua in User_agent.list:
-        ua = eval(ua)
-
-    if ua == None:
-        session = SubScan_utils.new_session()
-    else:
-        print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
-        session = SubScan_utils.new_session(ua)
-
-    site = SubScan_utils.verify_url(site)
-    compt = 0
-
-    with open(file, 'r') as file:
-        if method == "full":
-            if extension == None:
-                for line in file:
-                    compt += 1
-                    if compt % 40 == 0:
-                        SubScan_utils.new_ip(0)
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1]
-                    r = session.get(url)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-                    else:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
-            else:
-                for line in file:
-                    compt += 1
-                    if compt % 40 == 0:
-                        SubScan_utils.new_ip(0)
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1] + extension
-                    r = session.get(url)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-                    else:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
-
-            
-        elif method == None:
-            if extension == None:
-                for line in file:
-                    compt += 1
-                    if compt % 40 == 0:
-                        SubScan_utils.new_ip(0)
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1]
-                    r = session.get(url)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-            else:
-                for line in file:
-                    compt += 1
-                    if compt % 40 == 0:
-                        SubScan_utils.new_ip(0)
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1] + extension
-                    r = session.get(url)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+        if ua == None:
+            session = SubScan_utils.new_session()
         else:
-                SubScan_utils.error()
+            print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
+            session = SubScan_utils.new_session(ua)
 
-        SubScan_utils.stop_tor_service()
-        exit()
+        site = SubScan_utils.verify_url(site)
+        compt = 0
+
+        with open(file, 'r') as file:
+            if method == "full":
+                if extension == None:
+                    for line in file:
+                        compt += 1
+                        if compt % 40 == 0:
+                            SubScan_utils.new_ip(0)
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1]
+                        r = session.get(url)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                        else:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
+                else:
+                    for line in file:
+                        compt += 1
+                        if compt % 40 == 0:
+                            SubScan_utils.new_ip(0)
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1] + extension
+                        r = session.get(url)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                        else:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
+
+
+            elif method == None:
+                if extension == None:
+                    for line in file:
+                        compt += 1
+                        if compt % 40 == 0:
+                            SubScan_utils.new_ip(0)
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1]
+                        r = session.get(url)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                else:
+                    for line in file:
+                        compt += 1
+                        if compt % 40 == 0:
+                            SubScan_utils.new_ip(0)
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1] + extension
+                        r = session.get(url)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+            else:
+                    SubScan_utils.error()
+
+            SubScan_utils.stop_tor_service()
+            exit()
+    except KeyboardInterrupt:
+        SubScan_utils.keyboard_exit()
 
 
 
 def windows_search(site, file, timeout, extension, ua, method):
+    try:
+        if ua in User_agent.list:
+            ua = eval(ua)
 
-    if ua in User_agent.list:
-        ua = eval(ua)
-
-    if ua == None:
-        headers = None
-    else:
-        print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
-        headers = {'User-Agent': ua}
-
-
-    site = SubScan_utils.verify_url(site)
-    with open(file, 'r') as file:
-
-        if method == "full":
-            if extension == None:
-                for line in file:
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1]
-                    r = requests.get(url, headers=headers)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-                    else:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
-            else:
-                for line in file:
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1] + extension
-                    r = requests.get(url, headers=headers)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-                    else:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
-
-        elif method == None:
-            if extension == None:
-                for line in file:
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1]
-                    r = requests.get(url, headers=headers)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-            else:
-                for line in file:
-                    if timeout != None:
-                        time.sleep(float(timeout))
-                    url = site + line[:-1] + extension
-                    r = requests.get(url, headers=headers)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+        if ua == None:
+            headers = None
         else:
-            SubScan_utils.error()
-        exit()
+            print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
+            headers = {'User-Agent': ua}
 
+
+        site = SubScan_utils.verify_url(site)
+        with open(file, 'r') as file:
+
+            if method == "full":
+                if extension == None:
+                    for line in file:
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1]
+                        r = requests.get(url, headers=headers)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                        else:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
+                else:
+                    for line in file:
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1] + extension
+                        r = requests.get(url, headers=headers)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                        else:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
+
+            elif method == None:
+                if extension == None:
+                    for line in file:
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1]
+                        r = requests.get(url, headers=headers)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                else:
+                    for line in file:
+                        if timeout != None:
+                            time.sleep(float(timeout))
+                        url = site + line[:-1] + extension
+                        r = requests.get(url, headers=headers)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+            else:
+                SubScan_utils.error()
+            exit()
+    except KeyboardInterrupt:
+        SubScan_utils.keyboard_exit()
 
 def windows_search_NP(site, file, timeout, extension, ua):
+    try:
+        if ua in User_agent.list:
+            ua = eval(ua)
 
-    if ua in User_agent.list:
-        ua = eval(ua)
-
-    if ua == None:
-        headers = None
-    else:
-        print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
-        headers = {'User-Agent': ua}
-
-    site = SubScan_utils.verify_url(site)
-    list = []
-    with open(file, 'r') as file:
-        if extension == None:
-            for line in file:
-                if timeout != None:
-                    time.sleep(float(timeout))
-                url = site + line[:-1]
-                r = requests.get(url, headers=headers)
-                if r.status_code == 200:
-                    list.append(f"{url} : valid")
-            return list
+        if ua == None:
+            headers = None
         else:
-            for line in file:
-                if timeout != None:
-                    time.sleep(float(timeout))
-                url = site + line[:-1] + extension
-                r = requests.get(url, headers=headers)
-                if r.status_code == 200:
-                    list.append(f"{url} : valid")
-            return list
+            print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
+            headers = {'User-Agent': ua}
+
+        site = SubScan_utils.verify_url(site)
+        list = []
+        with open(file, 'r') as file:
+            if extension == None:
+                for line in file:
+                    if timeout != None:
+                        time.sleep(float(timeout))
+                    url = site + line[:-1]
+                    r = requests.get(url, headers=headers)
+                    if r.status_code == 200:
+                        list.append(f"{url} : valid")
+                return list
+            else:
+                for line in file:
+                    if timeout != None:
+                        time.sleep(float(timeout))
+                    url = site + line[:-1] + extension
+                    r = requests.get(url, headers=headers)
+                    if r.status_code == 200:
+                        list.append(f"{url} : valid")
+                return list
+    except KeyboardInterrupt:
+        return list
+        SubScan_utils.keyboard_exit()
 
 
 def linux_search_NP(site, file, timeout, extension, ua):
+    try:
+        if ua in User_agent.list:
+            ua = eval(ua)
 
-    if ua in User_agent.list:
-        ua = eval(ua)
-
-    if ua == None:
-        session = SubScan_utils.new_session()
-    else:
-        print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
-        session = SubScan_utils.new_session(ua)
-
-    site = SubScan_utils.verify_url(site)
-    list = []
-    compt = 0
-
-    with open(file, 'r') as file:
-        if extension == None:
-            for line in file:
-                compt += 1
-                if compt % 40 == 0:
-                    SubScan_utils.new_ip()
-                if timeout != None:
-                    time.sleep(float(timeout))
-                url = site + line[:-1]
-                r = session.get(url)
-                if r.status_code == 200:
-                    list.append(url)
-            return list
+        if ua == None:
+            session = SubScan_utils.new_session()
         else:
-            for line in file:
-                compt += 1
-                if compt % 40 == 0:
-                    SubScan_utils.new_ip()
-                if timeout != None:
-                    time.sleep(float(timeout))
-                url = site + line[:-1]
-                r = session.get(url)
-                if r.status_code == 200:
-                    list.append(url)
-            return list
-        SubScan_utils.stop_tor_service()
+            print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
+            session = SubScan_utils.new_session(ua)
+
+        site = SubScan_utils.verify_url(site)
+        list = []
+        compt = 0
+
+        with open(file, 'r') as file:
+            if extension == None:
+                for line in file:
+                    compt += 1
+                    if compt % 40 == 0:
+                        SubScan_utils.new_ip()
+                    if timeout != None:
+                        time.sleep(float(timeout))
+                    url = site + line[:-1]
+                    r = session.get(url)
+                    if r.status_code == 200:
+                        list.append(url)
+                return list
+            else:
+                for line in file:
+                    compt += 1
+                    if compt % 40 == 0:
+                        SubScan_utils.new_ip()
+                    if timeout != None:
+                        time.sleep(float(timeout))
+                    url = site + line[:-1]
+                    r = session.get(url)
+                    if r.status_code == 200:
+                        list.append(url)
+                return list
+            SubScan_utils.stop_tor_service()
+    except KeyboardInterrupt:
+        return list
+        SubScan_utils.keyboard_exit()
 
 
 def DNS_enum(site, file, timeout, ua, method):
-
-    regex = "^(https://)"
-    regex2 = "^(http://)"
-    if re.match(regex, site):
-        site = site.replace('https://', '')
-        r1 = 'https://'
-    elif re.match(regex2, site):
-        site = site.replace('http://', '')
-        r1 = 'http://'
-    else:
-        site = site.replace('https://', '')
-        r1 = 'https://'
-
-    if ua in User_agent.list:
-        ua = eval(ua)
-
-    if ua == None:
-        session = SubScan_utils.new_session()
-    else:
-        print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
-        session = SubScan_utils.new_session(ua)
-
-    site = SubScan_utils.verify_url(site)
-    compt = 0
-
-    with open(file, 'r') as file:
-        if method == "full":
-            for line in file:
-                compt += 1
-                if compt % 40 == 0:
-                    SubScan_utils.new_ip(0)
-                if timeout != None:
-                    time.sleep(float(timeout))
-                url = f"{r1}{line[:-1]}.{site}"
-                try:
-                    r = session.get(url)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-                    else:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
-                except:
-                    print(
-                        f"{color.blue('[+]')} {color.yellow('Url :')} {color.magenta(url)} {color.white('is invalid ! Statut :')} {color.blue('Nonexistent')}")
-                    pass
-
-
-        elif method == None:
-            for line in file:
-                compt += 1
-                if compt % 40 == 0:
-                    SubScan_utils.new_ip(0)
-                if timeout != None:
-                    time.sleep(float(timeout))
-                url = f"{r1}{line[:-1]}.{site}"
-                try:
-                    r = session.get(url)
-                    if r.status_code == 200:
-                        print(
-                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
-                except:
-                    pass
+    try:
+        regex = "^(https://)"
+        regex2 = "^(http://)"
+        if re.match(regex, site):
+            site = site.replace('https://', '')
+            r1 = 'https://'
+        elif re.match(regex2, site):
+            site = site.replace('http://', '')
+            r1 = 'http://'
         else:
-            SubScan_utils.error()
+            site = site.replace('https://', '')
+            r1 = 'https://'
 
-        SubScan_utils.stop_tor_service()
-        exit()
+        if ua in User_agent.list:
+            ua = eval(ua)
 
+        if ua == None:
+            session = SubScan_utils.new_session()
+        else:
+            print(color.blue('[-]'), color.yellow('User-Agent : '), color.white(ua))
+            session = SubScan_utils.new_session(ua)
+
+        site = SubScan_utils.verify_url(site)
+        compt = 0
+
+        with open(file, 'r') as file:
+            if method == "full":
+                for line in file:
+                    compt += 1
+                    if compt % 40 == 0:
+                        SubScan_utils.new_ip(0)
+                    if timeout != None:
+                        time.sleep(float(timeout))
+                    url = f"{r1}{line[:-1]}.{site}"
+                    try:
+                        r = session.get(url)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                        else:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
+                    except:
+                        print(
+                            f"{color.blue('[+]')} {color.yellow('Url :')} {color.magenta(url)} {color.white('is invalid ! Statut :')} {color.blue('Nonexistent')}")
+                        pass
+
+
+            elif method == None:
+                for line in file:
+                    compt += 1
+                    if compt % 40 == 0:
+                        SubScan_utils.new_ip(0)
+                    if timeout != None:
+                        time.sleep(float(timeout))
+                    url = f"{r1}{line[:-1]}.{site}"
+                    try:
+                        r = session.get(url)
+                        if r.status_code == 200:
+                            print(
+                                f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
+                    except:
+                        pass
+            else:
+                SubScan_utils.error()
+
+            SubScan_utils.stop_tor_service()
+            exit()
+    except KeyboardInterrupt:
+        SubScan_utils.keyboard_exit()
 
 def get_host_ip(site):
     site = SubScan_utils.verify_url_for_get_ip(site)
@@ -682,7 +726,10 @@ def scan_ports(ip, value, t, thread):
         except OSError:
             print(
                 f"{color.blue('[+]')} {color.white('Port')} {color.yellow(p)} {color.magenta('/')} {color.green('unknow')} {color.white(': Open')}")
-    print(f"\u001b[107m\n{color.black(f'[--(| Time : {round(float(time.time() - start_time), 4)} s |)--]')}\n")
+    if os.name == 'nt':
+        print(f"\n{color.black(f'[--(| Time : {round(float(time.time() - start_time), 4)} s |)--]')}\n")
+    else:
+        print(f"\u001b[107m\n{color.black(f'[--(| Time : {round(float(time.time() - start_time), 4)} s |)--]')}\n")
     exit()
 
 
