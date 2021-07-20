@@ -117,14 +117,14 @@ if __name__ == "__main__":
                         else:
                             SubScan.scan_ports(ip, '1-9000', 1, 2)
             else:
-                SubScan.SubScan_utils.invalid_argument()
+                SubScan.SubScanError.invalid_argumentError()
 
         elif argument[1] == '-tp':
             if '-p' in argument:
                 pswd = argument[argument.index('-p') + 1]
                 SubScan.SubScan_utils.hash_passwd_file(pswd, True)
             else:
-                SubScan.SubScan_utils.invalid_argument()
+                SubScan.SubScanError.invalid_argumentError()
 
         elif argument[1] == '-dns':
             if '-u' in argument:
@@ -157,9 +157,9 @@ if __name__ == "__main__":
                             else:
                                 SubScan.DNS_enum(url, file, None, None, None)
                 else:
-                    SubScan.SubScan_utils.invalid_argument()
+                    SubScan.SubScanError.invalid_argumentError()
             else:
-                SubScan.SubScan_utils.invalid_argument()
+                SubScan.SubScanError.invalid_argumentError()
 
         elif argument[1] == '-route':
             if '-u' in argument:
@@ -170,13 +170,13 @@ if __name__ == "__main__":
                 else:
                     SubScan.get_routes(url, None)
             else:
-                SubScan.SubScan_utils.invalid_argument()
+                SubScan.SubScanError.invalid_argumentError()
 
         else:
-            SubScan.SubScan_utils.invalid_argument()
+            SubScan.SubScanError.invalid_argumentError()
 
     except KeyboardInterrupt:
-        SubScan.SubScan_utils.keyboard_exit()
+        SubScan.SubScanError.invalid_argumentError()
 
     except IndexError:
-        SubScan.SubScan_utils.invalid_argument()
+        SubScan.SubScanError.invalid_argumentError()
