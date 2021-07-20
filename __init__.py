@@ -96,6 +96,74 @@ class color:
             return text
 
 
+class exceptions:
+
+    class CommandParameterError(Exception):
+        pass
+
+    class ParameterError(Exception):
+        pass
+
+    class UndifinedError(Exception):
+        pass
+
+    class ManagementError(Exception):
+        pass
+
+    class AccessError(Exception):
+        pass
+
+class SubScanError:
+
+    @staticmethod
+    def AdminError():
+        raise exceptions.AccessError(color.pastel_red("\nPlease use this command in admin mode\n"))
+
+    @staticmethod
+    def MethodError():
+        try:
+            subprocess.run('sudo service tor stop', shell=True)
+        except:
+            pass
+        raise exceptions.CommandParameterError(color.pastel_red("\nMethod Error\n"))
+
+    @staticmethod
+    def TorError():
+        try:
+            subprocess.run('sudo service tor stop', shell=True)
+        except:
+            pass
+        raise exceptions.ParameterError(color.pastel_red("\nTor Error\n"))
+
+    @staticmethod
+    def error():
+        try:
+            subprocess.run('sudo service tor stop', shell=True)
+        except:
+            pass
+        raise exceptions.UndifinedError(color.red("\nError !\n"))
+
+    @staticmethod
+    def invalid_argumentError():
+        raise exceptions.CommandParameterError(color.red("Arguments invalids"))
+
+    @staticmethod
+    def keyboard_exit():
+        try:
+            subprocess.run('sudo service tor stop', shell=True)
+        except:
+            pass
+        exit()
+
+    @staticmethod
+    def UrlError():
+        raise exceptions.CommandParameterError(color.pastel_red("Url Error"))
+
+    @staticmethod
+    def WindowsError():
+        raise exceptions.ManagementError(color.pastel_red("Windows does not support Tor"))
+
+
 class User_agent:
     list = ['User_agent.Linux.Firefox', 'User_agent.Linux.Edge', 'User_agent.Linux.Chrome', 'User_agent.Linux.Opera',
             'User_agent.Windows.Firefox', 'User_agent.Windows.Edge', 'User_agent.Windows.Chrome', 'User_agent.Windows.Opera',
@@ -156,7 +224,6 @@ class User_agent:
         Yahoo = str(start + 'Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)')
 
 
-
 # Creating a new class for the module SubScan
 class SubScan_utils:
 
@@ -180,7 +247,7 @@ class SubScan_utils:
     @staticmethod
     def new_session(*ua):
         if os.name == "nt":
-            exit(color.pastel_red("\nWindows does not support Tor\n"))
+            SubScanError.WindowsError()
         else:
             try:
                 subprocess.run('sudo service tor start', shell=True)
@@ -209,7 +276,7 @@ class SubScan_utils:
 
             except Exception:
                 SubScan_utils.stop_tor_service()
-                exit(color.pastel_red(f"\n Error\n"))
+                SubScanError.error()
 
     @staticmethod
     def new_ip(*p):
@@ -228,7 +295,7 @@ class SubScan_utils:
                     print(
                         f"{color.magenta('[*]')} {color.white('New ip')} {color.blue(re.findall(reg, requests.get('http://httpbin.org/ip', proxies=proxies).text)[0])}")
         except:
-            exit(color.pastel_red("\nTor error\n"))
+            SubScanError.TorError()
     @staticmethod        
     def start_message():
         logo1 = color.white(""" 
@@ -319,10 +386,10 @@ class SubScan_utils:
             return r
 
         if os.name == 'nt':
-            exit(color.pastel_red("\nWindows does not support Tor\n"))
+            SubScanError.WindowsError()
         else:
             if os.getuid() != 0:
-                exit(color.pastel_red("\nPlease use this command in admin mode\n"))
+                SubScanError.AdminError()
             else:
                 out = subprocess.check_output(f'tor --hash-password {pswd}', shell=True)
                 out = out.decode('utf-8').replace('\n', '')
@@ -356,28 +423,6 @@ class SubScan_utils:
 
                     if m:
                         exit(color.green("\nFinish\n"))
-
-
-    @staticmethod 
-    def error():
-        try:
-            subprocess.run('sudo service tor stop', shell=True)
-        except:
-            pass
-        exit(color.red("\nError !\n"))
-
-    @staticmethod 
-    def invalid_argument():
-        exit(color.red("Arguments invalids"))
-
-    @staticmethod 
-    def keyboard_exit():
-        try:
-            subprocess.run('sudo service tor stop', shell=True)
-        except:
-            pass
-        exit()
-
 
 
 def linux_search(site, file, timeout, extension, ua, method):
@@ -454,12 +499,12 @@ def linux_search(site, file, timeout, extension, ua, method):
                             print(
                                 f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
             else:
-                    SubScan_utils.error()
+                    SubScanError.MethodError()
 
             SubScan_utils.stop_tor_service()
             exit()
     except KeyboardInterrupt:
-        SubScan_utils.keyboard_exit()
+        SubScanError.keyboard_exit()
 
 
 
@@ -524,10 +569,10 @@ def windows_search(site, file, timeout, extension, ua, method):
                             print(
                                 f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
             else:
-                SubScan_utils.error()
+                SubScanError.MethodError()
             exit()
     except KeyboardInterrupt:
-        SubScan_utils.keyboard_exit()
+        SubScanError.keyboard_exit()
 
 def windows_search_NP(site, file, timeout, extension, ua):
     try:
@@ -563,7 +608,7 @@ def windows_search_NP(site, file, timeout, extension, ua):
                 return list
     except KeyboardInterrupt:
         return list
-        SubScan_utils.keyboard_exit()
+        SubScanError.keyboard_exit()
 
 
 def linux_search_NP(site, file, timeout, extension, ua):
@@ -609,7 +654,7 @@ def linux_search_NP(site, file, timeout, extension, ua):
             SubScan_utils.stop_tor_service()
     except KeyboardInterrupt:
         return list
-        SubScan_utils.keyboard_exit()
+        SubScanError.keyboard_exit()
 
 
 def DNS_enum(site, file, timeout, ua, method):
@@ -677,18 +722,21 @@ def DNS_enum(site, file, timeout, ua, method):
                     except:
                         pass
             else:
-                SubScan_utils.error()
+                SubScanError.MethodError()
 
             SubScan_utils.stop_tor_service()
             exit()
     except KeyboardInterrupt:
-        SubScan_utils.keyboard_exit()
+        SubScanError.keyboard_exit()
 
 def get_host_ip(site):
     site = SubScan_utils.verify_url_for_get_ip(site)
-    ip = socket.gethostbyname(site)
-    print(f"{color.white(f'The')} {color.green(site)}{color.white(' ip is :')} {color.blue(ip)}")
-    exit()
+    try:
+        ip = socket.gethostbyname(site)
+        print(f"{color.white(f'The')} {color.green(site)}{color.white(' ip is :')} {color.blue(ip)}")
+        exit()
+    except:
+        SubScanError.Url()
 
 def scan_ports(ip, value, t, thread):
     value = value.split('-')
@@ -764,6 +812,6 @@ def get_routes(url, ua):
             SubScan_utils.stop_tor_service()
         exit()
 
-    except requests.exceptions.ConnectionError or requests.exceptions.InvalidURL:
+    except requests.exceptions.RequestException:
         SubScan_utils.stop_tor_service()
-        exit(color.red("Url not found"))
+        SubScanError.UrlError()
