@@ -26,7 +26,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
   
   ```python3 SubScan_shell.py -find -u https://github.com/ -w dl.txt [-a User_agent.Android.Edge] [-f] [-e .php]``` --> List directories of a website with method full
   
-  ```python3 SubScan_shell.py -scan -i 0.0.0.0 [-r 1-9000] [-t 0.2] [-tn 20]``` --> List open ports between 1 and 9000 on host 0.0.0.0 with a timeout of 0.2 and 20 threads 
+  ```python3 SubScan_shell.py -scan -i 0.0.0.0 [-r 1-9000] [-t 1] [-tn 2]``` --> List open ports between 1 and 9000 on host 0.0.0.0 with a timeout of 0.2 and 20 threads 
   
   ```python3 SubScan_shell.py -ip -u google.com``` --> Get the server ip of the web page
   
@@ -70,7 +70,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
    ``SubScan.scan_ports('ip', 'search_range', timeout, thread_number)``
    
    *Ex :* 
-   ``SubScan.scan_ports('0.0.0.0.0', '1-8000', 1, 20)``
+   ``SubScan.scan_ports('0.0.0.0.0', '1-8000', 1, 2)``
 
    <h3>Get ip</h3>
   
