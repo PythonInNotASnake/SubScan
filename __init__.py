@@ -377,7 +377,7 @@ class SubScan_utils:
         return url
 
     @staticmethod 
-    def hash_passwd_file(pswd, *m):
+    def hash_passwd_file(pswd="default", *m):
         def config(p1, p2, file, p4):
             if re.search(p1, file):
                 r = re.sub(p1, p4, file)
@@ -425,7 +425,167 @@ class SubScan_utils:
                         exit(color.green("\nFinish\n"))
 
 
-def linux_search(site, file, timeout, extension, ua, method):
+class Network:
+
+    class discover:
+        @staticmethod
+        def get_plage(netmask):
+            compt = 0
+            plage = Network.discover.addrtobin(netmask)
+            for n in plage:
+                if n == '0':
+                    compt += 1
+
+            return str(pow(2, compt)), compt
+
+        @staticmethod
+        def addrtobin(ip):
+            r = [bin(int(x) + 256)[3:] for x in ip.split('.')]
+            result = str()
+            for v in r:
+                result += v
+            return str(result)
+
+        @staticmethod
+        def bintoaddr(binary):
+            binary = [int(x, 2) for x in binary.split('.')]
+            result = str()
+            for v in binary:
+                result += str(v) + "."
+            return result[:-1]
+
+        @staticmethod
+        def getBroadcastAddr(ip, netmask):
+            plage, compt = Network.discover.get_plage(netmask)
+            ip = Network.discover.addrtobin(ip)
+            ip = ip[:-compt] + '1' * compt
+            compt2 = 0
+            binary = str()
+            for v in ip:
+                if compt2 == 7:
+                    compt2 = 0
+                    binary += v + "."
+                else:
+                    compt2 += 1
+                    binary += v
+            binary = binary[:-1]
+            addr = Network.discover.bintoaddr(binary)
+            return addr
+
+        @staticmethod
+        def get_network_class(ip):
+            compt = Network.discover.addrtobin(ip)
+            if compt[0] == '0':
+                return "A"
+            elif compt[0:2] == '10':
+                return "B"
+            elif compt[0:2] == '11':
+                if compt[2] == '1':
+                    if compt[3] == '0':
+                        return "D"
+                    else:
+                        return "E"
+
+                else:
+                    return "C"
+            else:
+                return None
+
+    class scan_ports:
+            port_compt = 0
+            scan_result = str("\n")
+            start = False
+            finish = False
+
+            @staticmethod
+            def start_threads_scan():
+                Network.scan_ports.start = True
+                Network.scan_ports.finish = False
+
+            @staticmethod
+            def New_scan(ip):
+                print(f"\nScanning {ip} ...\n")
+                Network.scan_ports.port_compt = 0
+                Network.scan_ports.scan_result = str("\n")
+                Network.scan_ports.start = False
+
+            @staticmethod
+            def search_ports(ip, port, timeout,
+                             thread=False):
+                for p in port:
+                    if thread:
+                        while not Network.scan_ports.start:
+                            pass
+                    print(f"\r{color.red('[+]')} {color.blue(Network.scan_ports.port_compt)} {color.white('ports scanned')}", end='', flush=True)
+                    Network.scan_ports.port_compt += 1
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    sock.settimeout(timeout)
+                    if sock.connect_ex((ip, p)) == 0:
+                        try:
+                            Network.scan_ports.scan_result += f"\n{color.white('Port :')} {color.yellow(p)} {color.magenta('/')} {color.white('Status :')} {color.blue('Open')} {color.magenta('/')} {color.white('Service :')} {color.green(socket.getservbyport(p))}"
+                        except:
+                            Network.scan_ports.scan_result += f"\n{color.white('Port :')} {color.yellow(p)} {color.magenta('/')} {color.white('Status :')} {color.blue('Open')} {color.magenta('/')} {color.white('Service :')} {color.green('Unknow')}"
+                    sock.close()
+                Network.scan_ports.finish = True
+
+
+            @staticmethod
+            def one(ip='127.0.0.1',
+                    port='80',
+                    timeout=1):
+                Network.scan_ports.New_scan(ip)
+                Network.scan_ports.search_ports(ip, port, timeout)
+                return Network.scan_ports.scan_result
+
+            @staticmethod
+            def fast(ip='127.0.0.1',
+                     timeout=0.5):
+                Network.scan_ports.New_scan(ip)
+                l = [20, 21, 22, 23, 25, 80, 110, 137, 135, 139, 143, 389, 443, 445, 993, 995, 1433, 3306, 5357, 5900, 6667]
+                Network.scan_ports.search_ports(ip, l, timeout)
+                return Network.scan_ports.scan_result
+
+            @staticmethod
+            def medium(ip='127.0.0.1',
+                       timeout=0.5):
+                Network.scan_ports.New_scan(ip)
+                ports = range(1500)
+                Network.scan_ports.search_ports(ip, ports, timeout)
+                return Network.scan_ports.scan_result
+
+            @staticmethod
+            def full(ip='127.0.0.1',
+                     timeout=0.5):
+                Network.scan_ports.New_scan(ip)
+                ports = range(8000)
+                Network.scan_ports.search_ports(ip, ports, timeout)
+                return Network.scan_ports.scan_result
+
+            @staticmethod
+            def custom(ip='127.0.0.1',
+                       r='1-6500',
+                       timeout=0.1):
+
+                Network.scan_ports.New_scan(ip)
+                time.sleep(0.5)
+                r = r.split('-')
+                r = range(int(r[0]), int(r[1]))
+                r2 = int(len(r) / 2)
+                threading.Thread(target=Network.scan_ports.search_ports, args=(ip, r[:r2], timeout, True)).start()
+                threading.Thread(target=Network.scan_ports.search_ports, args=(ip, r[r2:], timeout, True)).start()
+                Network.scan_ports.start_threads_scan()
+                while not Network.scan_ports.finish:
+                    pass
+                return Network.scan_ports.scan_result
+
+
+def linux_search(site=None,
+                 file='dl.txt',
+                 timeout=None,
+                 extension=None,
+                 ua=None,
+                 method=None):
+
     try:
         if ua in User_agent.list:
             ua = eval(ua)
@@ -472,7 +632,6 @@ def linux_search(site, file, timeout, extension, ua, method):
                             print(
                                 f"{color.blue('[+]')} {color.yellow('Url :')} {color.pastel_red(url)} {color.white('is invalid ! Statut :')} {color.blue(r.status_code)}")
 
-
             elif method == None:
                 if extension == None:
                     for line in file:
@@ -507,8 +666,12 @@ def linux_search(site, file, timeout, extension, ua, method):
         SubScanError.keyboard_exit()
 
 
-
-def windows_search(site, file, timeout, extension, ua, method):
+def windows_search(site=None,
+                   file='dl.txt',
+                   timeout=None,
+                   extension=None,
+                   ua=None,
+                   method=None):
     try:
         if ua in User_agent.list:
             ua = eval(ua)
@@ -574,7 +737,12 @@ def windows_search(site, file, timeout, extension, ua, method):
     except KeyboardInterrupt:
         SubScanError.keyboard_exit()
 
-def windows_search_NP(site, file, timeout, extension, ua):
+
+def windows_search_NP(site=None,
+                      file='dl.txt',
+                      timeout=None,
+                      extension=None,
+                      ua=None):
     try:
         if ua in User_agent.list:
             ua = eval(ua)
@@ -611,7 +779,11 @@ def windows_search_NP(site, file, timeout, extension, ua):
         SubScanError.keyboard_exit()
 
 
-def linux_search_NP(site, file, timeout, extension, ua):
+def linux_search_NP(site=None,
+                    file='dl.txt',
+                    timeout=None,
+                    extension=None,
+                    ua=None):
     try:
         if ua in User_agent.list:
             ua = eval(ua)
@@ -657,7 +829,12 @@ def linux_search_NP(site, file, timeout, extension, ua):
         SubScanError.keyboard_exit()
 
 
-def DNS_enum(site, file, timeout, ua, method):
+def DNS_enum(site=None,
+             file='dl.txt',
+             timeout=None,
+             ua=None,
+             method=None):
+
     try:
         regex = "^(https://)"
         regex2 = "^(http://)"
@@ -729,6 +906,7 @@ def DNS_enum(site, file, timeout, ua, method):
     except KeyboardInterrupt:
         SubScanError.keyboard_exit()
 
+
 def get_host_ip(site):
     site = SubScan_utils.verify_url_for_get_ip(site)
     try:
@@ -736,52 +914,11 @@ def get_host_ip(site):
         print(f"{color.white(f'The')} {color.green(site)}{color.white(' ip is :')} {color.blue(ip)}")
         exit()
     except:
-        SubScanError.Url()
-
-def scan_ports(ip, value, t, thread):
-    value = value.split('-')
-    thread = int(thread)
-    port_list = []
-    start_time = time.time()
-
-    def search_ports(ip, port):
-        for p in port:
-            try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                if t != None:
-                    sock.settimeout(float(t))
-                result = sock.connect_ex((ip, p))
-                if result == 0:
-                    port_list.append(int(p))
-                sock.close()
-            except OSError:
-                pass
-
-    compt = 0
-    for num in range(int(value[0]), int(value[1]) + 1, thread):
-        list = []
-        compt += 1
-        for nums in range(0, thread - 1):
-            list.append(num + nums)
-        if compt % 350 == 0:
-            time.sleep(0.5)
-        threading.Thread(target=search_ports, args=(ip, list)).start()
-    time.sleep(0.5)
-    for p in sorted(port_list):
-        try:
-            print(
-                f"{color.blue('[+]')} {color.white('Port')} {color.yellow(p)} {color.magenta('/')} {color.green(socket.getservbyport(p))} {color.white(': Open')}")
-        except OSError:
-            print(
-                f"{color.blue('[+]')} {color.white('Port')} {color.yellow(p)} {color.magenta('/')} {color.green('unknow')} {color.white(': Open')}")
-    if os.name == 'nt':
-        print(f"\n{color.black(f'[--(| Time : {round(float(time.time() - start_time), 4)} s |)--]')}\n")
-    else:
-        print(f"\u001b[107m\n{color.black(f'[--(| Time : {round(float(time.time() - start_time), 4)} s |)--]')}\n")
-    exit()
+        SubScanError.UrlError()
 
 
-def get_routes(url, ua):
+def get_routes(url,
+               ua=None):
 
     if ua in User_agent.list:
         ua = eval(ua)
