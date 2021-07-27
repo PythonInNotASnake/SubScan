@@ -56,7 +56,7 @@ SubScan has two main functions: one to list directories of a website on Windows 
    <h3>Ports scan</h3>
    
    Use this command to scan open ports on a machine
-   
+   # An improvement is planned #
    ``SubScan.scan_ports('ip', 'search_range', timeout, thread_number)``
    
    *Ex :* 
