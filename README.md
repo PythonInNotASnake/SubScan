@@ -17,9 +17,12 @@ SubScan has two main functions: one to list directories of a website on Windows 
   
   <h2>Configuration</h2>
   
-  1) With linux terminal run this command
+  1) Under Linux, run the following commands in the python shell
 
-  ```sudo python3 SubScan_shell.py -tp -p yourpassword```
+  ```
+  import SubScan
+  SubScan.SubScan_utils.hash_passwd_file(your_password)
+  ```
   
  
 <h1>Terminal commands</h1>
