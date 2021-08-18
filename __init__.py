@@ -1,5 +1,5 @@
-__author__ = "Negative.py"
-__discord__ = "</белый_хакер>#4103"
+__author__ = "N3g4t1v3"
+__discord__ = "N3g4t1v3#4103"
 
 # Importing modules
 try:
