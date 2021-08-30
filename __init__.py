@@ -3,6 +3,7 @@ __discord__ = "N3g4t1v3#4103"
 
 # Importing modules
 try:
+    import sys
     import time
     from stem import Signal
     from stem.control import Controller
@@ -223,6 +224,16 @@ class User_agent:
 
 # Creating a new class for the module SubScan
 class SubScan_utils:
+
+    @staticmethod
+    def shortcut():
+        if os.name == "nt":
+            SubScanError.WindowsError()
+        else:
+            with open('SubScan', 'w') as sc:
+                sc.write(f'#!/bin/bash\npython{sys.version[:3]} {__file__}')
+            sc.close()
+            subprocess.run('sudo chmod +x SubScan && sudo mv ./SubScan /../bin/', shell=True)
 
     @staticmethod
     def clear():
@@ -1000,13 +1011,14 @@ class terminal_color:
 if __name__ == '__main__':
     c = terminal_color.config()
     SubScan_utils.clear()
+    SubScan_utils.shortcut()
     SubScan_utils.start_message()
     while True:
         print(c, end='')
         command = input('\b')
         try:
             if command.lower().replace(' ', '') == 'exit':
-                exit()
+                break
             elif command.lower().replace(' ', '') == 'theme':
                 terminal_color.choice()
                 c = terminal_color.config()
@@ -1022,3 +1034,4 @@ if __name__ == '__main__':
             print('\n')
         except :
             print(color.red('Please Enter a valid command\n'))
+    exit()
