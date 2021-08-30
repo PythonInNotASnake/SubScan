@@ -228,7 +228,11 @@ class SubScan_utils:
     @staticmethod
     def shortcut():
         if os.name == "nt":
-            SubScanError.WindowsError()
+            with open('SubScan.bat', 'w') as sc:
+                sc.write(f'python{sys.version[:3]} {__file__}')
+            sc.close()
+            subprocess.run('powershell "start cmd -v runAs" && move SubScan.bat c:\windows\system32', shell=True)
+
         else:
             with open('SubScan', 'w') as sc:
                 sc.write(f'#!/bin/bash\npython{sys.version[:3]} {__file__}')
@@ -1011,7 +1015,6 @@ class terminal_color:
 if __name__ == '__main__':
     c = terminal_color.config()
     SubScan_utils.clear()
-    SubScan_utils.shortcut()
     SubScan_utils.start_message()
     while True:
         print(c, end='')
