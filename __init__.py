@@ -993,6 +993,7 @@ class terminal_color:
         with open('SubScan_color.config', 'r') as file:
             r = file.readlines()
             if r == []:
+                terminal_color.new_config('Sunlight')
                 c = terminal_color.theme_list.get('Sunlight')
                 return c
             else:
