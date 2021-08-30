@@ -229,9 +229,11 @@ class SubScan_utils:
     def shortcut():
         if os.name == "nt":
             with open('SubScan.bat', 'w') as sc:
-                sc.write(f'python{sys.version[:3]} {__file__}')
+                sc.write(f'python {__file__}')
             sc.close()
-            subprocess.run('powershell "start cmd -v runAs" && move SubScan.bat c:\windows\system32', shell=True)
+            with open('Create_Shortcut.bat', 'w') as make_shortcut:
+                make_shortcut.write(f'move {SubScan_utils.get_path()}SubScan.bat C:\Windows\System32')
+            subprocess.run(f'powershell "start {SubScan_utils.get_path()}Create_Shortcut.bat -v runAs" ', shell=True)
 
         else:
             with open('SubScan', 'w') as sc:
@@ -247,8 +249,12 @@ class SubScan_utils:
     def get_path():
         path = str()
 
-        for directory in __file__.split('/')[0:-1]:
-            path = path + directory + '/'
+        if os.name == "nt":
+            s = '\\'
+        else:
+            s = '/'
+        for directory in __file__.split(s)[0:-1]:
+            path = path + directory + s
 
 
         return path
@@ -1013,7 +1019,11 @@ class terminal_color:
 
 
 if __name__ == '__main__':
-    c = terminal_color.config()
+    try:
+        c = terminal_color.config()
+    except FileNotFoundError:
+        terminal_color.new_config('Sunlight')
+        c = terminal_color.config()
     SubScan_utils.clear()
     SubScan_utils.start_message()
     while True:
