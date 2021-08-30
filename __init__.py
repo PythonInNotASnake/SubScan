@@ -3,16 +3,13 @@ __discord__ = "N3g4t1v3#4103"
 
 # Importing modules
 try:
-    import sys
     import time
     from stem import Signal
     from stem.control import Controller
-    import colorama
     import random
     import requests
     import socket
     import re
-    import stem
     import threading
     import os
     import subprocess
@@ -226,6 +223,10 @@ class User_agent:
 
 # Creating a new class for the module SubScan
 class SubScan_utils:
+
+    @staticmethod
+    def clear():
+        print('\033c')
 
     @staticmethod
     def get_path():
@@ -661,7 +662,6 @@ def linux_search(site=None,
                     SubScanError.MethodError()
 
             SubScan_utils.stop_tor_service()
-            exit()
     except KeyboardInterrupt:
         SubScanError.keyboard_exit()
 
@@ -733,7 +733,6 @@ def windows_search(site=None,
                                 f"{color.blue('[+]')} {color.yellow('Url :')} {color.green(url)} {color.white('is valid ! Statut :')} {color.blue(r.status_code)}")
             else:
                 SubScanError.MethodError()
-            exit()
     except KeyboardInterrupt:
         SubScanError.keyboard_exit()
 
@@ -902,7 +901,7 @@ def DNS_enum(site=None,
                 SubScanError.MethodError()
 
             SubScan_utils.stop_tor_service()
-            exit()
+
     except KeyboardInterrupt:
         SubScanError.keyboard_exit()
 
@@ -912,9 +911,9 @@ def get_host_ip(site):
     try:
         ip = socket.gethostbyname(site)
         print(f"{color.white(f'The')} {color.green(site)}{color.white(' ip is :')} {color.blue(ip)}")
-        exit()
     except:
         SubScanError.UrlError()
+
 
 
 def get_routes(url,
@@ -947,8 +946,79 @@ def get_routes(url,
                     print(
                         f"{color.yellow('[')}{color.blue(urls)}{color.yellow(']')} {color.white('Url :')} {color.green(r[urls].url)}")
             SubScan_utils.stop_tor_service()
-        exit()
 
     except requests.exceptions.RequestException:
         SubScan_utils.stop_tor_service()
         SubScanError.UrlError()
+
+class terminal_color:
+
+    theme_list = {
+       'Sunlight' : f"{color.yellow('|')}{color.magenta('-')}{color.yellow('>')}  ",
+       'Ice And Fire' : f"{color.blue('|')}{color.red('~')}{color.blue('>')}  ",
+       'JokR' : f"{color.magenta('$')}{color.green('~')}{color.magenta('>')}  ",
+       'Earth' : f"{color.blue('(')}{color.green('~')}{color.blue(')')}{color.magenta('>')}  ",
+       'Extra' : '{}{}{}{}{}  '.format(color.pastel_red("┌─["), color.white(" SubScan "), color.pastel_red("""]\n└─"""), color.white("$"), color.pastel_red(">"))
+    }
+
+    @staticmethod
+    def new_config(color):
+        with open('SubScan_color.config', 'w') as file:
+            file.write(color)
+            file.close
+
+    @staticmethod
+    def config():
+        with open('SubScan_color.config', 'r') as file:
+            r = file.readlines()
+            if r == []:
+                c = terminal_color.theme_list.get('Sunlight')
+                return c
+            else:
+                c = terminal_color.theme_list.get(r[0])
+                return c
+
+    @staticmethod
+    def choice():
+        presentation = f"\n[0]    {color.red('Exit the color configuration menu')}\n\n"
+        for theme in terminal_color.theme_list:
+            presentation += f"[{list(terminal_color.theme_list).index(theme) + 1}]    {theme}\n{terminal_color.theme_list.get(theme)}\n\n"
+        print(presentation)
+        while True:
+            print(color.green('?>  '), end='')
+            result = input("\b")
+            if result == '0':
+                break
+            else:
+                try:
+                    terminal_color.new_config(list(terminal_color.theme_list)[int(result) - 1])
+                    break
+                except:
+                    print(color.red("Please Enter a valid number !\n"))
+
+
+if __name__ == '__main__':
+    c = terminal_color.config()
+    SubScan_utils.clear()
+    SubScan_utils.start_message()
+    while True:
+        print(c, end='')
+        command = input('\b')
+        try:
+            if command.lower().replace(' ', '') == 'exit':
+                exit()
+            elif command.lower().replace(' ', '') == 'theme':
+                terminal_color.choice()
+                c = terminal_color.config()
+            elif command.lower().replace(' ', '') == 'clear':
+                SubScan_utils.clear()
+            elif command.lower() == 'ua list':
+                for UserAgents in User_agent.list:
+                    print(color.green(UserAgents), end='\n')
+            elif command.lower() == 'help':
+                print(color.magenta('Look at https://github.com/Negative-py/SubScan for more informations'))
+            else:
+                exec(command)
+            print('\n')
+        except :
+            print(color.red('Please Enter a valid command\n'))
