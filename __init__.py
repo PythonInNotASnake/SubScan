@@ -231,9 +231,7 @@ class SubScan_utils:
             with open('SubScan.bat', 'w') as sc:
                 sc.write(f'python {__file__}')
             sc.close()
-            with open('Create_Shortcut.bat', 'w') as make_shortcut:
-                make_shortcut.write(f'move {SubScan_utils.get_path()}SubScan.bat C:\Windows\System32')
-            subprocess.run(f'powershell "start {SubScan_utils.get_path()}Create_Shortcut.bat -v runAs" ', shell=True)
+            subprocess.run(f'''powershell "start cmd '-cmd /K move {SubScan_utils.get_path()}SubScan.bat C:\Windows\System32 && exit' -v runAs " ''', shell=False)
 
         else:
             with open('SubScan', 'w') as sc:
@@ -1030,22 +1028,25 @@ if __name__ == '__main__':
     while True:
         print(c, end='')
         command = input('\b')
-        try:
-            if command.lower().replace(' ', '') == 'exit':
-                break
-            elif command.lower().replace(' ', '') == 'theme':
-                terminal_color.choice()
-                c = terminal_color.config()
-            elif command.lower().replace(' ', '') == 'clear':
-                SubScan_utils.clear()
-            elif command.lower() == 'ua list':
-                for UserAgents in User_agent.list:
-                    print(color.green(UserAgents), end='\n')
-            elif command.lower() == 'help':
-                print(color.magenta('Look at https://github.com/Negative-py/SubScan for more informations'))
-            else:
+        if command.lower().replace(' ', '') == 'exit':
+            break
+        elif command.lower().replace(' ', '') == 'shortcut':
+            SubScan_utils.shortcut()
+        elif command.lower().replace(' ', '') == 'theme':
+            terminal_color.choice()
+            c = terminal_color.config()
+        elif command.lower().replace(' ', '') == 'clear':
+            SubScan_utils.clear()
+        elif command.lower() == 'ua list':
+            for UserAgents in User_agent.list:
+                print(color.green(UserAgents), end='\n')
+        elif command.lower() == 'help':
+            print(color.magenta('Look at https://github.com/Negative-py/SubScan for more informations'))
+        else:
+            try:
                 exec(command)
-            print('\n')
-        except :
-            print(color.red('Please Enter a valid command\n'))
+                print('\n')
+            except :
+                print(color.red('Please Enter a valid command\n'))
+        
     exit()
